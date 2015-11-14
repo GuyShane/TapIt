@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -17,7 +16,7 @@ public class GameScreen extends ScreenAdapter {
     private Camera camera;
     private Viewport viewport;
     private ShapeRenderer sr;
-    private Bubble bubble;
+    private BubbleMaster bubbles;
     private InputHandler in;
 
     public GameScreen() {
@@ -31,7 +30,7 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
         viewport=new FitViewport(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT,camera);
         sr=new ShapeRenderer();
-        bubble=new Bubble(100,100);
+        bubbles=new BubbleMaster();
         in=new InputHandler(viewport);
     }
 
@@ -40,16 +39,19 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (in.isTouching()) {
-            if (bubble.isTapping(in.getTouch())) {
-                bubble.setPosition(MathUtils.random(100,1100),MathUtils.random(100,700));
+            if (bubbles.shouldPop(in.getTouch())) {
+                bubbles.pop();
+            }
+            else if(bubbles.shouldDie(in.getTouch())) {
+                System.out.println("Dead");
             }
         }
-        bubble.update(delta);
+        bubbles.update(delta);
         sr.setProjectionMatrix(camera.projection);
         sr.setTransformMatrix(camera.view);
         sr.setAutoShapeType(true);
         sr.begin();
-        bubble.draw(sr);
+        bubbles.draw(sr);
         sr.end();
     }
 

@@ -1,30 +1,33 @@
 package com.shane.tapit;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-
-import java.awt.Point;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * Created by shane on 12/11/15.
  */
-public class Bubble {
-    private float x,y;
-    private float haloSpeed=50;
-    private int bubbleRadius=55;
-    private float haloRadius=170;
+public class Bubble implements Pool.Poolable{
+    private static final float HALO_MARGIN=5;
+    private static final float HALO_SIZE=180;
+    private float haloSpeed = 60;
 
-    public Bubble(float x, float y) {
-        this.x=x;
-        this.y=y;
+    private float x,y;
+    private int bubbleRadius=55;
+    private float haloRadius=HALO_SIZE;
+    private float bubbleTime;
+
+    public Bubble() {
+        this.x=MathUtils.random(bubbleRadius,Constants.VIEWPORT_WIDTH-bubbleRadius);
+        this.y=MathUtils.random(bubbleRadius,Constants.VIEWPORT_HEIGHT-bubbleRadius);
+        this.bubbleTime=(HALO_SIZE-bubbleRadius)/haloSpeed;
     }
 
-    public void setPosition(float x, float y) {
-        this.haloRadius=170;
-        this.x=x;
-        this.y=y;
+    private void replace() {
+        this.haloRadius=HALO_SIZE;
+        this.x=MathUtils.random(bubbleRadius,Constants.VIEWPORT_WIDTH-bubbleRadius);
+        this.y=MathUtils.random(bubbleRadius,Constants.VIEWPORT_HEIGHT-bubbleRadius);
     }
 
     public void draw(ShapeRenderer sr) {
@@ -36,13 +39,30 @@ public class Bubble {
     }
 
     public void update(float delta) {
-        haloRadius-=haloSpeed*delta;
-        if (haloRadius<bubbleRadius) {
-            haloRadius=170;
+        haloRadius-= haloSpeed *delta;
+        if (haloRadius<=0) {
+            haloRadius=HALO_SIZE;
         }
     }
 
-    public boolean isTapping(Vector2 point) {
+    public boolean shouldDie(Vector2 point) {
+        return (isTouched(point) && !isTouchValid()) || (haloRadius<bubbleRadius-HALO_MARGIN);
+    }
+
+    public boolean shouldPop(Vector2 point) {
+        return isTouched(point) && isTouchValid();
+    }
+
+    private boolean isTouchValid() {
+        return (haloRadius>=bubbleRadius-HALO_MARGIN && haloRadius<=bubbleRadius+HALO_MARGIN);
+    }
+
+    private boolean isTouched(Vector2 point) {
         return ((int)Math.sqrt(Math.pow((point.x-x),2)+Math.pow((point.y-y),2)))<=bubbleRadius;
+    }
+
+    @Override
+    public void reset() {
+        replace();
     }
 }
