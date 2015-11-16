@@ -9,18 +9,13 @@ import com.badlogic.gdx.utils.Pool;
  * Created by shane on 12/11/15.
  */
 public class Bubble implements Pool.Poolable{
-    private static final float HALO_MARGIN=5;
+    private static final float HALO_MARGIN=10;
     private static final float HALO_SIZE=180;
     private static final int BUBBLE_RADIUS =55;
     private float haloSpeed;
 
     private float x,y;
     private float haloRadius=HALO_SIZE;
-
-    public Bubble() {
-        this.x=MathUtils.random(BUBBLE_RADIUS,Constants.VIEWPORT_WIDTH- BUBBLE_RADIUS);
-        this.y=MathUtils.random(BUBBLE_RADIUS,Constants.VIEWPORT_HEIGHT- BUBBLE_RADIUS);
-    }
 
     public Bubble(float speed) {
         this.haloSpeed=speed;

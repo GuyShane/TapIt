@@ -45,9 +45,6 @@ public class BubbleMaster {
         popped++;
         if (popped%10==0) {
             speedUp();
-            System.out.println("Speeding up");
-            System.out.println("Speed: "+haloSpeed);
-            System.out.println("Wait time: "+waitTime);
         }
     }
 
