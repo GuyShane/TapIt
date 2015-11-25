@@ -9,25 +9,25 @@ import com.badlogic.gdx.utils.Pool;
  * Created by shane on 12/11/15.
  */
 public class Bubble implements Pool.Poolable{
-    private static final float HALO_MARGIN=10;
-    private static final float HALO_SIZE=180;
+    private static final double HALO_MARGIN=10;
+    private static final double HALO_SIZE=180;
     private static final int BUBBLE_RADIUS =55;
-    private float haloSpeed;
+    private double haloSpeed;
 
-    private float x,y;
-    private float haloRadius=HALO_SIZE;
+    private double x,y;
+    private double haloRadius=HALO_SIZE;
 
-    public Bubble(float speed) {
+    public Bubble(double speed) {
         this.haloSpeed=speed;
         this.x=MathUtils.random(BUBBLE_RADIUS,Constants.VIEWPORT_WIDTH- BUBBLE_RADIUS);
         this.y=MathUtils.random(BUBBLE_RADIUS,Constants.VIEWPORT_HEIGHT- BUBBLE_RADIUS);
     }
 
-    public void setSpeed(float speed) {
+    public void setSpeed(double speed) {
         haloSpeed=speed;
     }
 
-    public static float getHaloDist() {
+    public static double getHaloDist() {
         return HALO_SIZE-BUBBLE_RADIUS;
     }
 
@@ -40,12 +40,13 @@ public class Bubble implements Pool.Poolable{
     public void draw(ShapeRenderer sr) {
         sr.setColor(0, 1, 0.6f, 1);
         sr.set(ShapeRenderer.ShapeType.Filled);
-        sr.circle(x, y, BUBBLE_RADIUS);
+        sr.circle((float)x,(float) y, BUBBLE_RADIUS);
+        sr.setColor(0,0,0,1);
         sr.set(ShapeRenderer.ShapeType.Line);
-        sr.circle(x, y, haloRadius);
+        sr.circle((float)x, (float)y, (float)haloRadius);
     }
 
-    public void update(float delta) {
+    public void update(double delta) {
         haloRadius-= haloSpeed *delta;
         if (haloRadius<=0) {
             haloRadius=HALO_SIZE;

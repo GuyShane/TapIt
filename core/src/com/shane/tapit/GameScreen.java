@@ -42,17 +42,27 @@ public class GameScreen extends ScreenAdapter {
             if (bubbles.shouldPop(in.getTouch())) {
                 bubbles.pop();
             }
-            else if(bubbles.shouldDie(in.getTouch())) {
-                System.out.println("Dead");
-            }
+        }
+        if(bubbles.shouldDie(in.getTouch())) {
+            System.out.println("Dead");
         }
         bubbles.update(delta);
         sr.setProjectionMatrix(camera.projection);
         sr.setTransformMatrix(camera.view);
         sr.setAutoShapeType(true);
         sr.begin();
+        drawLives();
         bubbles.draw(sr);
         sr.end();
+    }
+
+    private void drawLives() {
+        sr.setColor(0, 0, 0, 1);
+        sr.set(ShapeRenderer.ShapeType.Filled);
+        for (int i=0;i<bubbles.getLives();i++) {
+            int r=12;
+            sr.circle(r*i*2+15,Constants.VIEWPORT_HEIGHT-(r+8),r);
+        }
     }
 
     @Override

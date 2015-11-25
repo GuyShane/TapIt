@@ -1,6 +1,7 @@
 package com.shane.tapit;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -9,16 +10,21 @@ import com.badlogic.gdx.utils.Pool;
  * Created by shane on 13/11/15.
  */
 public class BubbleMaster {
+    private static final double HALO_SPEED=60;
+
     private Pool<Bubble> bubblePool;
     private Array<Bubble> bubbles;
-    private float waitTime;
-    private float haloSpeed;
-    private float timer=0;
+    private double waitTime;
+    private double haloSpeed;
+    private double timer=0;
     private int popped=0;
+    private int lives;
+    private int level;
 
     public BubbleMaster() {
-        haloSpeed=60;
-        waitTime=Bubble.getHaloDist()/(haloSpeed*2);
+        lives=3;
+        level=1;
+        setSpeed();
         bubbles=new Array<Bubble>();
         bubblePool=new Pool<Bubble>() {
             @Override
@@ -29,8 +35,19 @@ public class BubbleMaster {
         addBubble();
     }
 
-    private void speedUp() {
-        haloSpeed*=1.2;
+    public int getLives() {
+        return lives;
+    }
+
+    private void levelUp() {
+        if (level<8) {
+            level++;
+        }
+        setSpeed();
+    }
+
+    private void setSpeed() {
+        haloSpeed=HALO_SPEED*Math.pow(1.2,level-1);
         waitTime=Bubble.getHaloDist()/(haloSpeed*2);
     }
 
@@ -44,7 +61,7 @@ public class BubbleMaster {
         bubblePool.free(bubbles.removeIndex(0));
         popped++;
         if (popped%10==0) {
-            speedUp();
+            levelUp();
         }
     }
 
@@ -55,7 +72,18 @@ public class BubbleMaster {
 
     public boolean shouldDie(Vector2 point) {
         Bubble activeBubble=bubbles.first();
-        return activeBubble.shouldDie(point);
+        if (activeBubble.shouldDie(point)) {
+            if (lives>0) {
+                lives--;
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
     }
 
     public void draw(ShapeRenderer sr) {
