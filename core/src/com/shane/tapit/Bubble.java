@@ -13,11 +13,13 @@ public class Bubble implements Pool.Poolable{
     private static final double HALO_SIZE=180;
     private static final int BUBBLE_RADIUS =55;
     private double haloSpeed;
+    private boolean live;
 
     private double x,y;
     private double haloRadius=HALO_SIZE;
 
     public Bubble(double speed) {
+        this.live=true;
         this.haloSpeed=speed;
         this.x=MathUtils.random(BUBBLE_RADIUS,Constants.VIEWPORT_WIDTH- BUBBLE_RADIUS);
         this.y=MathUtils.random(BUBBLE_RADIUS,Constants.VIEWPORT_HEIGHT- BUBBLE_RADIUS);
@@ -40,7 +42,7 @@ public class Bubble implements Pool.Poolable{
     public void draw(ShapeRenderer sr) {
         sr.setColor(0, 1, 0.6f, 1);
         sr.set(ShapeRenderer.ShapeType.Filled);
-        sr.circle((float)x,(float) y, BUBBLE_RADIUS);
+        sr.circle((float) x, (float) y, BUBBLE_RADIUS);
         sr.setColor(0,0,0,1);
         sr.set(ShapeRenderer.ShapeType.Line);
         sr.circle((float)x, (float)y, (float)haloRadius);
@@ -54,7 +56,15 @@ public class Bubble implements Pool.Poolable{
     }
 
     public boolean shouldDie(Vector2 point) {
-        return (isTouched(point) && !isTouchValid()) || (haloRadius< BUBBLE_RADIUS -HALO_MARGIN);
+        boolean b=(isTouched(point) && !isTouchValid()) ||
+                  (haloRadius < BUBBLE_RADIUS - HALO_MARGIN);
+        if (live && b) {
+            live=false;
+            return b;
+        }
+        else {
+            return false;
+        }
     }
 
     public boolean shouldPop(Vector2 point) {

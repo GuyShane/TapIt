@@ -60,8 +60,8 @@ public class GameScreen extends ScreenAdapter {
         sr.setColor(0, 0, 0, 1);
         sr.set(ShapeRenderer.ShapeType.Filled);
         for (int i=0;i<bubbles.getLives();i++) {
-            int r=12;
-            sr.circle(r*i*2+15,Constants.VIEWPORT_HEIGHT-(r+8),r);
+            int r=15;
+            sr.circle(r*i*2+20,Constants.VIEWPORT_HEIGHT-(r+20),r);
         }
     }
 
