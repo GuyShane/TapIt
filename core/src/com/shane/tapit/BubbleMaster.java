@@ -96,8 +96,8 @@ public class BubbleMaster {
     }
 
     public void draw(ShapeRenderer sr) {
-        for (Bubble b: bubbles) {
-            b.draw(sr);
+        for (int i=bubbles.size-1;i>=0;i--) {
+            bubbles.get(i).draw(sr);
         }
     }
 

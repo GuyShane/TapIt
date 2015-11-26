@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Pool;
  */
 public class Bubble implements Pool.Poolable{
     private static final double HALO_MARGIN=10;
-    private static final double HALO_SIZE=180;
+    private static final double HALO_SIZE=200;
     private static final int BUBBLE_RADIUS =55;
     private double haloSpeed;
     private boolean live;
