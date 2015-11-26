@@ -20,6 +20,8 @@ public class BubbleMaster {
     private int levelCount=0;
     private int lives=3;
     private int level=1;
+    private boolean paused=false;
+    private double pauseTime=0;
 
     public BubbleMaster() {
         setSpeed();
@@ -37,20 +39,26 @@ public class BubbleMaster {
         return lives;
     }
 
-    private void levelDown() {
+    private void setLevel(int level) {
         levelCount=0;
-        if (level>1) {
-            level--;
+        if (level<1) {
+            this.level=1;
+        }
+        else if (level>8) {
+            this.level=8;
+        }
+        else {
+            this.level = level;
         }
         setSpeed();
     }
 
+    private void levelDown() {
+        setLevel(level - 1);
+    }
+
     private void levelUp() {
-        levelCount=0;
-        if (level<8) {
-            level++;
-        }
-        setSpeed();
+        setLevel(level+1);
     }
 
     private void setSpeed() {
@@ -74,15 +82,14 @@ public class BubbleMaster {
     }
 
     public boolean shouldPop(Vector2 point) {
-        Bubble activeBubble=bubbles.first();
-        return activeBubble.shouldPop(point);
+        return bubbles.first().shouldPop(point);
     }
 
     public boolean shouldDie(Vector2 point) {
-        Bubble activeBubble=bubbles.first();
-        if (activeBubble.shouldDie(point)) {
+        if (bubbles.first().shouldDie(point)) {
             if (lives>0) {
                 lives--;
+                pause();
                 levelDown();
                 return false;
             }
@@ -99,14 +106,29 @@ public class BubbleMaster {
         }
     }
 
+    private void pause() {
+        paused=true;
+        pauseTime=2;
+    }
+
     public void update(float delta) {
-        for (Bubble b: bubbles) {
-            b.update(delta);
+        if (!paused) {
+            for (Bubble b : bubbles) {
+                b.update(delta);
+            }
+            timer += delta;
+            if (timer > waitTime) {
+                timer = 0;
+                addBubble();
+            }
         }
-        timer+=delta;
-        if (timer>waitTime) {
-            timer=0;
-            addBubble();
+        else {
+            pauseTime-=delta;
+            if (pauseTime<0){
+                paused =false;
+                bubbles.clear();
+                addBubble();
+            }
         }
     }
 }
