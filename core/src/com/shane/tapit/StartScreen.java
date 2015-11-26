@@ -23,6 +23,9 @@ public class StartScreen extends ScreenAdapter {
     private AssetManager am;
     private Stage stage;
 
+    private Texture play;
+    private Texture playPressed;
+
     public StartScreen(Game game) {
         this.game=game;
         am=new AssetManager();
@@ -36,8 +39,8 @@ public class StartScreen extends ScreenAdapter {
         stage=new Stage(new FitViewport(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT));
         Gdx.input.setInputProcessor(stage);
 
-        Texture play = am.get("play.png");
-        Texture playPressed = am.get("play_pressed.png");
+        play = am.get("play.png");
+        playPressed = am.get("play_pressed.png");
 
         ImageButton button=new ImageButton(new TextureRegionDrawable(new TextureRegion(play)),
                 new TextureRegionDrawable(new TextureRegion(playPressed)));
@@ -45,7 +48,9 @@ public class StartScreen extends ScreenAdapter {
         button.addListener(new ActorGestureListener() {
             @Override
             public void tap(InputEvent event, float x, float y, int count, int button) {
-                super.tap(event, x, y, count, button);game.setScreen(new GameScreen());
+                super.tap(event, x, y, count, button);
+                game.setScreen(new GameScreen());
+                dispose();
             }
         });
         stage.addActor(button);
@@ -67,6 +72,9 @@ public class StartScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-
+        play.dispose();
+        playPressed.dispose();
+        stage.dispose();
+        am.dispose();
     }
 }

@@ -18,12 +18,10 @@ public class BubbleMaster {
     private double timer=0;
     private int popped=0;
     private int levelCount=0;
-    private int lives;
-    private int level;
+    private int lives=3;
+    private int level=1;
 
     public BubbleMaster() {
-        lives=3;
-        level=1;
         setSpeed();
         bubbles=new Array<Bubble>();
         bubblePool=new Pool<Bubble>() {
