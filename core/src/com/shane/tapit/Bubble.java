@@ -60,7 +60,7 @@ public class Bubble implements Pool.Poolable{
                   (haloRadius < BUBBLE_RADIUS - HALO_MARGIN);
         if (live && b) {
             live=false;
-            return b;
+            return true;
         }
         else {
             return false;
