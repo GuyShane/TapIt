@@ -18,6 +18,7 @@ public class BubbleMaster {
     private double haloSpeed;
     private double timer=0;
     private int popped=0;
+    private int levelCount=0;
     private int lives;
     private int level;
 
@@ -39,7 +40,16 @@ public class BubbleMaster {
         return lives;
     }
 
+    private void levelDown() {
+        levelCount=0;
+        if (level>1) {
+            level--;
+        }
+        setSpeed();
+    }
+
     private void levelUp() {
+        levelCount=0;
         if (level<8) {
             level++;
         }
@@ -60,7 +70,8 @@ public class BubbleMaster {
     public void pop() {
         bubblePool.free(bubbles.removeIndex(0));
         popped++;
-        if (popped%10==0) {
+        levelCount++;
+        if (levelCount==10) {
             levelUp();
         }
     }
@@ -75,15 +86,14 @@ public class BubbleMaster {
         if (activeBubble.shouldDie(point)) {
             if (lives>0) {
                 lives--;
+                levelDown();
                 return false;
             }
             else {
                 return true;
             }
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     public void draw(ShapeRenderer sr) {
