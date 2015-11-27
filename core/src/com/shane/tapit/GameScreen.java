@@ -1,5 +1,6 @@
 package com.shane.tapit;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Camera;
@@ -13,14 +14,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Created by shane on 12/11/15.
  */
 public class GameScreen extends ScreenAdapter {
+    private Game game;
     private Camera camera;
     private Viewport viewport;
     private ShapeRenderer sr;
     private BubbleMaster bubbles;
     private InputHandler in;
 
-    public GameScreen() {
-
+    public GameScreen(Game game) {
+        this.game=game;
     }
 
     @Override
@@ -44,7 +46,8 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         if(bubbles.shouldDie(in.getTouch())) {
-            System.out.println("Dead");
+            game.setScreen(new StartScreen(game));
+            dispose();
         }
         bubbles.update(delta);
         sr.setProjectionMatrix(camera.projection);

@@ -15,13 +15,14 @@ public class BubbleMaster {
     private Array<Bubble> bubbles;
     private double waitTime;
     private double haloSpeed;
-    private double timer=0;
+    private double bubbleTimer =0;
     private int popped=0;
     private int levelCount=0;
     private int lives=3;
     private int level=1;
     private boolean paused=false;
     private double pauseTime=0;
+    private boolean done=false;
 
     public BubbleMaster() {
         setSpeed();
@@ -87,7 +88,7 @@ public class BubbleMaster {
 
     public boolean shouldDie(Vector2 point) {
         if (bubbles.first().shouldDie(point)) {
-            if (lives>0) {
+            if (lives>=0) {
                 lives--;
                 pause();
                 levelDown();
@@ -97,7 +98,7 @@ public class BubbleMaster {
                 return true;
             }
         }
-        return false;
+        return done;
     }
 
     public void draw(ShapeRenderer sr) {
@@ -116,18 +117,24 @@ public class BubbleMaster {
             for (Bubble b : bubbles) {
                 b.update(delta);
             }
-            timer += delta;
-            if (timer > waitTime) {
-                timer = 0;
+            bubbleTimer += delta;
+            if (bubbleTimer > waitTime) {
+                bubbleTimer = 0;
                 addBubble();
             }
         }
         else {
             pauseTime-=delta;
             if (pauseTime<0){
-                paused =false;
-                bubbles.clear();
-                addBubble();
+                if (lives<0) {
+                    done=true;
+                }
+                else {
+                    paused = false;
+                    bubbles.clear();
+                    bubbleTimer = 0;
+                    addBubble();
+                }
             }
         }
     }
