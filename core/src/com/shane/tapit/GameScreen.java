@@ -40,16 +40,21 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (in.isTouching()) {
+        if (in.isTouching() && in.isNewTouchEvent()) {
             if (bubbles.shouldPop(in.getTouch())) {
                 bubbles.pop();
             }
+            else if (bubbles.shouldDieBefore(in.getTouch())) {
+                game.setScreen(new StartScreen(game));
+                dispose();
+            }
         }
-        if(bubbles.shouldDie(in.getTouch())) {
+        if (bubbles.shouldDieAfter()) {
             game.setScreen(new StartScreen(game));
             dispose();
         }
         bubbles.update(delta);
+        in.update();
         sr.setProjectionMatrix(camera.projection);
         sr.setTransformMatrix(camera.view);
         sr.setAutoShapeType(true);
@@ -64,7 +69,8 @@ public class GameScreen extends ScreenAdapter {
         sr.set(ShapeRenderer.ShapeType.Filled);
         for (int i=0;i<bubbles.getLives();i++) {
             int r=15;
-            sr.circle(r*i*2+20,Constants.VIEWPORT_HEIGHT-(r+20),r);
+            int dist=30;
+            sr.circle(r*2+dist*(i+1),Constants.VIEWPORT_HEIGHT-(r+dist),r);
         }
     }
 

@@ -86,8 +86,23 @@ public class BubbleMaster {
         return bubbles.first().shouldPop(point);
     }
 
-    public boolean shouldDie(Vector2 point) {
-        if (bubbles.first().shouldDie(point)) {
+    public boolean shouldDieBefore(Vector2 point) {
+        if (bubbles.first().shouldDieBefore(point)) {
+            if (lives>=0) {
+                lives--;
+                pause();
+                levelDown();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return done;
+    }
+
+    public boolean shouldDieAfter() {
+        if (bubbles.first().shouldDieAfter()) {
             if (lives>=0) {
                 lives--;
                 pause();

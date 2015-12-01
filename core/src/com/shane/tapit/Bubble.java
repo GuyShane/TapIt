@@ -55,9 +55,19 @@ public class Bubble implements Pool.Poolable{
         }
     }
 
-    public boolean shouldDie(Vector2 point) {
-        boolean b=(isTouched(point) && !isTouchValid()) ||
-                  (haloRadius < BUBBLE_RADIUS - HALO_MARGIN);
+    public boolean shouldDieBefore(Vector2 point) {
+        boolean b=(isTouched(point) && !isTouchValid());
+        if (live && b) {
+            live=false;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean shouldDieAfter() {
+        boolean b=(haloRadius<BUBBLE_RADIUS-HALO_MARGIN);
         if (live && b) {
             live=false;
             return true;

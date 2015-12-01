@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class InputHandler {
     private Viewport viewport;
+    private boolean touching=false;
 
     public InputHandler(Viewport viewport) {
         this.viewport=viewport;
@@ -20,6 +21,14 @@ public class InputHandler {
     }
 
     public Vector2 getTouch() {
-        return viewport.unproject(new Vector2(Gdx.input.getX(),Gdx.input.getY()));
+        return viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+    }
+
+    public boolean isNewTouchEvent() {
+        return !touching;
+    }
+
+    public void update() {
+        touching=isTouching();
     }
 }
