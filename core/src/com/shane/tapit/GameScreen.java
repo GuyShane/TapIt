@@ -45,12 +45,12 @@ public class GameScreen extends ScreenAdapter {
                 bubbles.pop();
             }
             else if (bubbles.shouldDieBefore(in.getTouch())) {
-                game.setScreen(new StartScreen(game));
+                game.setScreen(new EndScreen(game));
                 dispose();
             }
         }
         if (bubbles.shouldDieAfter()) {
-            game.setScreen(new StartScreen(game));
+            game.setScreen(new EndScreen(game));
             dispose();
         }
         bubbles.update(delta);
